@@ -1,7 +1,9 @@
 Hi @everyone!
 This project shows your Valorant stats directly in your Discord profile using Rich Presence.
 It looks like this!
+
 ![Preview](images/preview.png)
+
 Feel free to customize it however you want, but please tag me. I would love to see what you create.
 
 To run this project you need:
