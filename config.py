@@ -1,8 +1,11 @@
-DISCORD_CLIENT_ID = "" # 
-UPDATE_INTERVAL = 15  # in seconds
-REFRESH_API =  180  # seconds
-REGION = "" # eu na latam br ap kr, choose yours
-NICKNAME = "" # Your nickname (without tag (tag is what goes after #))
-TAG = "" # Your tag
-PUUID = None # If you know your puuid paste it here, by default it will find it using your Nickname, Tag, Region
+# Configuration file
+# Fill in the fields below before running the application
+DISCORD_CLIENT_ID = "" # Get it from Discord developer portal
+UPDATE_INTERVAL = 30  # in seconds, how often slides will change
+REFRESH_API =  180  # seconds, how often your stats will be refreshed, dont set it to low bc 
+REGION = "" # eu, na, latam, br, ap, kr, choose your region
+# CoolName#SWAGA
+NICKNAME = "CoolName" # Your Valorant nickname (without the tag)
+TAG = "SWAGA" # Your tag (the part after #)
+PUUID = None  # If you know your PUUID, paste it here. Otherwise it will be automatically fetched using your nickname, tag, and region
 

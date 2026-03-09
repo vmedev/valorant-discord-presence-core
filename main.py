@@ -1,9 +1,8 @@
-# This version is console only console programm
 import time
 import threading
 from datetime import datetime
 
-from config import DISCORD_CLIENT_ID, UPDATE_INTERVAL, Refresh_Api
+from config import DISCORD_CLIENT_ID, UPDATE_INTERVAL, REFRESH_API
 from valorant_api import get_stats
 from presence import DiscordPresence
 
@@ -25,25 +24,26 @@ def api_loop():
                 latest_stats = stats
                 latest_error = None
                 last_api_time = datetime.now()
-            print(f"[API] Stats updated at {last_api_time.strftime('%H:%M:%S')}")
-        except BaseException as e:
+            print("[API OK]", stats)
+        except Exception as e:
             with lock:
                 latest_error = str(e)
-            print(f"[API ERROR] {e}")
+            print("[API ERROR]", e)
 
-        stop_event.wait(Refresh_Api)
+        stop_event.wait(REFRESH_API)
 
 
 def rpc_loop():
     global latest_error
 
     try:
+        print("[RPC] connecting...")
         presence = DiscordPresence(DISCORD_CLIENT_ID)
-        print("[RPC] Discord RPC connected")
+        print("[RPC] connected")
     except Exception as e:
         with lock:
             latest_error = f"Discord RPC init error: {e}"
-        print(f"[RPC ERROR] Discord RPC init error: {e}")
+        print("[RPC INIT ERROR]", e)
         return
 
     while not stop_event.is_set():
@@ -53,69 +53,33 @@ def rpc_loop():
 
         if stats and not err:
             try:
+                print("[RPC] updating...", stats)
                 presence.update(stats)
-                print("[RPC] Presence updated")
+                print("[RPC] updated")
             except Exception as e:
                 with lock:
                     latest_error = f"Discord RPC update error: {e}"
-                print(f"[RPC ERROR] Discord RPC update error: {e}")
+                print("[RPC UPDATE ERROR]", e)
 
         stop_event.wait(UPDATE_INTERVAL)
 
 
-def force_refresh():
+def main():
     global latest_stats, latest_error, last_api_time
 
     try:
-        stats = get_stats()
-        with lock:
-            latest_stats = stats
-            latest_error = None
-            last_api_time = datetime.now()
-        print(f"[API] Initial stats loaded at {last_api_time.strftime('%H:%M:%S')}")
-    except BaseException as e:
-        with lock:
-            latest_error = str(e)
-        print(f"[API ERROR] {e}")
-
-
-def print_status_loop():
-    while not stop_event.is_set():
-        with lock:
-            stats = latest_stats
-            err = latest_error
-            t = last_api_time
-
-        if err:
-            print(f"[STATUS] ERROR: {err}")
-        elif not stats:
-            print("[STATUS] Loading stats...")
-        else:
-            rank = stats.get("rank", "Unknown")
-            kd = stats.get("kd", "?")
-            fav = stats.get("fav_agent") or stats.get("favorite_agent") or "Unknown"
-            api_time = t.strftime("%H:%M:%S") if t else "?"
-            print(f"[STATUS] Rank: {rank} | KD: {kd} | Fav agent: {fav} | API: {api_time}")
-
-        stop_event.wait(10)
-
-
-def main():
-    print("Starting Valorant Presence (console mode)...")
-    print("CLIENT_ID:", DISCORD_CLIENT_ID)
-
-    force_refresh()
+        latest_stats = get_stats()
+        last_api_time = datetime.now()
+        print("[START] first stats loaded")
+    except Exception as e:
+        latest_error = str(e)
+        print("[START ERROR]", e)
 
     threading.Thread(target=api_loop, daemon=True).start()
     threading.Thread(target=rpc_loop, daemon=True).start()
-    threading.Thread(target=print_status_loop, daemon=True).start()
 
-    try:
-        while True:
-            time.sleep(1)
-    except KeyboardInterrupt:
-        print("\nStopping...")
-        stop_event.set()
+    while True:
+        time.sleep(60)
 
 
 if __name__ == "__main__":
