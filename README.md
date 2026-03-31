@@ -1,27 +1,29 @@
-# Valorant Discord Presence
 Hi @everyone!
-Show your Valorant stats directly in your Discord profile using Rich Presence.
+This project shows your Valorant stats directly in your Discord profile using Rich Presence.
+It looks like this!
 
-![Preview](img_for_github/preview.png)
+![Preview](images/preview.png)
 
-## Interface
+Feel free to customize it however you want, but please tag me. I would love to see what you create.
 
-![UI Preview](img_for_github/UI_preview.png)
+To run this project you need:
+1. HenrikDev Api (https://api.henrikdev.xyz/dashboard/)
+2. From Discord Developer Portal Application ID (guide: https://www.youtube.com/watch?v=aWtc_kpqSVk)
+3. Your Nickname, Tag and Region
 
-## Requirements
-- Discord must be running
-- [Henrik Dev API key](https://developers.henrikdev.xyz/)
-- [Discord Application ID](https://discord.com/developers/applications)
 
-## Installation
-1. Download `app.exe` from [Releases](../../releases)
-2. Run it — no installation needed
-3. Fill in your details and click Start
+Open `config.py` and fill in:
 
-## Customization
-Feel free to customize the presence however you want!
-If you do, please tag me — I'd love to see what you create.
+- DISCORD_CLIENT_ID
+- REGION
+- NICKNAME
+- TAG
 
-## Notes
-- Windows Defender may flag the `.exe` — this is a false positive
-- Your config is saved in `%AppData%\MyApp\config.json`
+Disclamer
+
+This app uses the unofficial Valorant API provided by HenrikDev.
+
+I am not responsible for the data returned by the API, and this project is not affiliated with Riot Games.
+
+This application does **not collect or store any personal data**.
+All requests are made directly from your machine to the API.
